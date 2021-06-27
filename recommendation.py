@@ -20,7 +20,6 @@ def get_genre(games):
     for game in games:
         game_row = df.loc[df['name'] == game]
         genre = game_row["genre"].to_string(index=False)
-        print("Genre for this game is:",genre)
         try:
             genre_list = genre.split(",")
             for genre in genre_list:
@@ -46,7 +45,6 @@ def get_genre_ordered_list(genre):
         except:
             # This means there are no reviews or not enough reviews to have a score, hence we pass this
             pass
-        #print(score)
     ordered_list.sort(key = lambda x:x[1]) # Sort by the overall score
     return ordered_list
 
@@ -55,13 +53,19 @@ def get_genre_ordered_list(genre):
 def recommend(interests):
     # 1st task: parse the 3 games from interests input and get the core genre
     genre_of_interest = get_genre(interests)
-    print(genre_of_interest)
+    if genre_of_interest == -1:
+        # Invalid input
+        print("User's list is invalid")
+        return
+    print("User's primary genre of interest is:", genre_of_interest)
     # 2nd task: parse the CSV for a game from this genre, and return an ordered list, orderd by overall_score
     recommendations = get_genre_ordered_list(genre_of_interest)
     # 3rd task: return the top of this ordered list
-    return recommendations.pop()
+    top_recommendation = recommendations.pop()
+    print("The top recommendation for", genre_of_interest, "is:", top_recommendation[0], "and has an overall score of:", top_recommendation[1])
+    return
 
 
 ######### Driver test code
 inp_game = ["DOOM", "PLAYERUNKNOWN'S BATTLEGROUNDS", "BATTLETECH"]
-print(recommend(inp_game))
+recommend(inp_game)
